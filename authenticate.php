@@ -1,8 +1,58 @@
 <?php 
+  
+  session_start();
+
   require 'database.php';
 
+  if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $errors = [];
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+     $email = trim($_POST['email']);
+
+     $pass = $_POST['Pass'];
+
+     if($email === ''){
+        $errors[] = 'email is required';
+     }elseif(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'email invalid';
+     }
+
+     if($pass === ''){
+         $errors[] = 'password is Required';
+     }
+     
+     if(empty($errors)){
+       $stmt= $pdo->prepare("SELECT id , nom ,email ,PASSKEY FROM users 
+       WHERE email = ? LIMIT 1");
+       $stmt->execute([$email]);
+       $user = $stmt->fetch();
+
+       if(!$user || !password_verify($pass,$user['PASSKEY'])){
+           $errors[] = "email or password invalid";
+       }
+     }
+
+     if (!empty($errors)) {
+       foreach($errors as $error){
+        echo $error . '<br>';
+       }
+       exit;
+     }
+
+     $_SESSION['id'] = $user['id'];
+     $_SESSION['nom'] = $user['nom'];
+     $_SESSION['email'] = $user['email'];
+
+     header('location: dashboard.php');
+     exit;
+     
+  }
+
+
+
+
+
+    /* if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
         $errors = [];
 
@@ -61,4 +111,4 @@
         }
    
 
-    }
+    } */

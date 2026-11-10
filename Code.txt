@@ -1,112 +1,96 @@
-CREATE TABLE users(
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nom VARCHAR(25),
-  Prenom VARCHAR(50),
-  email VARCHAR(50)UNIQUE,
-  PASSKEY VARCHAR(50)
-)
+LOGIN
 
+<?php 
+      session_start();
 
+      if(isset($_SESSION['user_id'])){
+        header('Location: dashboard.php');
+      }
+?>
 
+<form action="authenticate.php" method="POST">
 
-<form action="process.php" method="POST">
+    <input type="email" name="email" required placeholder="email">
 
-    <input type="text" name="nom" required>
-
-    <input type="text" name="prenom" required>
-
-    <input type="email" name="email" required>
-
-    <input type="password" name="Pass_1" required>
-
-    <input type="password" name="Pass_2" required>
+    <input type="password" name="Pass" required placeholder="password">
 
     <button type="submit">Register</button>
 
 </form>
 
-<?php 
+authenticate
+
+  session_start();
+
   require 'database.php';
 
+  if($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $errors = [];
 
-    if($_SERVER['REQUEST_METHOD'] === 'POST'){
+     $email = trim($_POST['email']);
 
-        $errors = [];
+     $pass = $_POST['Pass'];
 
-        $nom = trim($_POST['nom']);
-        $prenom = trim($_POST['prenom']);
-        $email = trim($_POST['email']);
-        $Pass_1 = $_POST['Pass_1'];
-        $Pass_2 = $_POST['Pass_2'];
-
-        if(mb_strlen($nom) < 8 ){
-            $errors[] = "Firstname must be minimum 8 character";
-        }elseif(mb_strlen($nom) < 8){
-            $errors[] = "lastname must be minimum 8 character";
-        }
-
-        if ($email === '') {
-        $errors[] = "Email is required";
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = "Invalid email";
-        }elseif(filter_var($email, FILTER_VALIDATE_EMAIL)){
-             $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
-             $stmt->execute([$email]);
-
-             if ($stmt->fetch()){
-                $error[] = "This email is already registered";
-             }
-        };
-        
- 
-        if($Pass_1 !== $Pass_2){
-            $errors[] = "Password is not matching";
-        }elseif(mb_strlen($Pass_1) > 8){
-          $errors[] = "Password most be minimum 8 character";   
-        }
-
-        
-
-        if(!empty($errors)){
-          foreach($errors as $error){
-               echo htmlspecialchars($error) . "<br>";
-          }
-
-          exit;
-        }
-        
-
-        $hashpass = password_hash( $Pass_1 , PASSWORD_DEFAULT);
-
-        try{
-             $stmt = $pdo->prepare("INSERT INTO users(nom,Prenom,email,PASSKEY) VALUES(?,?,?,?)");
-             $stmt ->execute([$nom,$prenom,$email,$hashpass]);
-
-             echo "Welcome" . htmlspecialchars($nom) . " ";
-        }catch(PDOException $e){
-             echo "something wong happened";
-        }
-   
-
-    }
-
-    <?php
-
-     $host = 'localhost';
-     $dbname = 'pratik';
-     $user = 'root';
-     $pass = '';
-
-     try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4",
-        $user,
-        $pass,
-        [
-            PDO::ATTR_ERRMODE =>PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE =>PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ]
-        );
-     } catch (PDOException $e){
-        die("Database connection failed:" . $e->getMessage());
+     if($email === ''){
+        $errors[] = 'email is required';
+     }elseif(!filter_var($email,FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'email invalid';
      }
+
+     if($pass === ''){
+         $errors[] = 'password is Required';
+     }
+     
+     if(empty($errors)){
+       $stmt= $pdo->prepare("SELECT id , nom ,email ,PASSKEY FROM users 
+       WHERE email = ? LIMIT 1");
+       $stmt->execute([$email]);
+       $user = $stmt->fetch();
+
+       if(!$user || !password_verify($pass,$user['PASSKEY'])){
+           $errors[] = "email or password invalid";
+       }
+     }
+
+     if (!empty($errors)) {
+       foreach($errors as $error){
+        echo $error . '<br>';
+       }
+       exit;
+     }
+
+     $_SESSION['id'] = $user['id'];
+     $_SESSION['nom'] = $user['nom'];
+     $_SESSION['email'] = $user['email'];
+
+     header('location: dashboard.php');
+     exit;
+     
+  }
+
+DASHBOARD
+
+<?php
+session_start();
+
+     if (!$_SESSION['id']) {
+        header('login.php');
+     }else{
+
+        var_dump($_SESSION);
+        echo 'Bienvenue';
+     }
+
+     ?>
+
+<a href="logout.php">Se déconnecter</a>
+
+LOGOUT
+
+<?php
+session_start();
+session_unset();
+session_destroy();
+header('Location: login.php');
+exit;
+
