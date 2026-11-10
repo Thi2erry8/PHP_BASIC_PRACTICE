@@ -14,7 +14,7 @@
 
         if(mb_strlen($nom) < 8 ){
             $errors[] = "Firstname must be minimum 8 character";
-        }elseif(mb_strlen($nom) < 8){
+        }elseif(mb_strlen($prenom) < 8){
             $errors[] = "lastname must be minimum 8 character";
         }
 
@@ -27,14 +27,14 @@
              $stmt->execute([$email]);
 
              if ($stmt->fetch()){
-                $error[] = "This email is already registered";
+                $errors[] = "This email is already registered";
              }
         };
         
  
         if($Pass_1 !== $Pass_2){
             $errors[] = "Password is not matching";
-        }elseif(mb_strlen($Pass_1) > 8){
+        }elseif(mb_strlen($Pass_1) < 8){
           $errors[] = "Password most be minimum 8 character";   
         }
 
