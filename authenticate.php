@@ -39,6 +39,8 @@
        exit;
      }
 
+     session_regenerate_id(true) ;
+
      $_SESSION['id'] = $user['id'];
      $_SESSION['nom'] = $user['nom'];
      $_SESSION['email'] = $user['email'];

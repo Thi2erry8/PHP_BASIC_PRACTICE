@@ -1,7 +1,7 @@
 <?php 
       session_start();
 
-      if(isset($_SESSION['user_id'])){
+      if(isset($_SESSION['id'])){
         header('Location: dashboard.php');
       }
 
@@ -32,6 +32,6 @@
 
     <input type="password" name="Pass" required placeholder="password">
 
-    <button type="submit">Register</button>
+    <button type="submit">LOGIN</button>
 
 </form>

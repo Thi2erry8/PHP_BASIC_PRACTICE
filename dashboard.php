@@ -1,8 +1,9 @@
 <?php
 session_start();
 
-     if (!$_SESSION['id']) {
-        header('login.php');
+     if (!isset($_SESSION['id'])) {
+        header('Location: login.php');
+        exit;
      }else{
 
         var_dump($_SESSION);
