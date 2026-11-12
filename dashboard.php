@@ -13,3 +13,5 @@ session_start();
      ?>
 
 <a href="logout.php">Se déconnecter</a>
+
+<a href="users.php">Utilisateur</a>
