@@ -30,6 +30,14 @@ if (!$user) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+
+if (
+        !isset($_POST['csrf_token']) ||
+        !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+    ) {
+        exit('Invalid CSRF token');
+    }
+
     $nom = trim($_POST['nom'] ?? '');
     $prenom = trim($_POST['prenom'] ?? '');
     $email = trim($_POST['email'] ?? '');
@@ -82,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <?php endforeach; ?>
 
 <form method="POST">
+    <input type="hidden" name="crsf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
 
     <input type="text" name="nom" value="<?= htmlspecialchars($user['nom'], ENT_QUOTES, 'UTF-8') ?>" required>
 

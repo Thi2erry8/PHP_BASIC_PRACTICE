@@ -1,7 +1,9 @@
 <?php
 
  session_start();
- 
+   if(empty($_SESSION['csrf_token'])){
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+ };
   require('database.php');
 
   if(!isset($_SESSION['id'])){
@@ -45,6 +47,7 @@
 
                 <form action="delete.php" method="POST" style="display:inline"
                     onsubmit="return confirm('Supprimer cet utilisateur ?');">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
                     <input type="hidden" name="id" value="<?= (int)$user['id'] ?>">
                     <button type="submit" class="btn btn-delete">DELETE</button>
                 </form>

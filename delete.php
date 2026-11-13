@@ -11,6 +11,13 @@ require 'database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+if (
+        !isset($_POST['csrf_token']) ||
+        !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])
+    ) {
+        exit('Invalid CSRF token');
+    }
+
     $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 
     if (!$id || $id < 1) {
