@@ -7,12 +7,7 @@
        public int $quantity;
 
        public function __construct(string $name , float $price , int $quantity)
-       {
-          $this->name = $name;
-          $this->price = $price;
-          $this->quantity = $quantity;
-
-       }
+       {}
 
        public function ShowDetails():void{
          echo "Nom :" . $this->name;
