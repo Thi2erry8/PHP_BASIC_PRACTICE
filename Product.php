@@ -1,26 +1,24 @@
 <?php
 
-    class Product{
+class Product {
 
-       public string $name;
-       public float $price;
-       public int $quantity;
+    private float $price;
 
-       public function __construct(string $name , float $price , int $quantity)
-       {}
-
-       public function ShowDetails():void{
-         echo "Nom :" . $this->name;
-         echo "<br>Price :" . $this->price;
-         echo "<br>Quantity :" . $this->quantity;
-       }
-
-       public function calculateTotal():float{
-          return $this->price * $this->quantity;
-       }
+    public function __construct(float $price) {
+       
+        $this->setPrice($price);
+       
     }
 
+    public function getPrice():float {
+        return $this->price;
+    }
 
-    $Product1 = new Product("PS5",499.99,5);
-    $Product2 = new Product("Xbox One",350.50,3);
-    $Product3 = new Product("Nintendo Switch",299.99,7);
+    public function setPrice(float $price): void {
+         if($price < 0 ){
+          throw new InvalidArgumentException("Price can't be negatif");
+        }
+
+        $this->price = $price ;
+    }
+}
