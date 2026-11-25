@@ -19,8 +19,8 @@ class Product
         return "General Product";
     }
 
-    public function calculateShipping(): int {
-      return 0 ;
+    public function calculateShipping(): float {
+      return 0.0 ;
     }
 
 }
@@ -47,8 +47,8 @@ class PhysicalProduct extends Product {
         return "Physical Product";
     }
 
-    public function calculateShipping(): int {
-      return 10 ;
+    public function calculateShipping(): float {
+      return 10.0 ;
     }
 }
 
@@ -74,8 +74,8 @@ class DigitalProduct extends Product {
         return "Digital Product";
     }
 
-    public function calculateShipping(): int {
-      return 0 ;
+    public function calculateShipping(): float {
+      return 0.0 ;
     }
 }
 
