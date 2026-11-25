@@ -19,6 +19,10 @@ class Product
         return "General Product";
     }
 
+    public function calculateShipping(): int {
+      return 0 ;
+    }
+
 }
 
 class PhysicalProduct extends Product {
@@ -41,6 +45,10 @@ class PhysicalProduct extends Product {
    public function getCategory(): string
     {
         return "Physical Product";
+    }
+
+    public function calculateShipping(): int {
+      return 10 ;
     }
 }
 
@@ -65,11 +73,21 @@ class DigitalProduct extends Product {
     {
         return "Digital Product";
     }
+
+    public function calculateShipping(): int {
+      return 0 ;
+    }
 }
 
-$physical = new PhysicalProduct("PS5", 500, 3.5);
+$products = [
+    new PhysicalProduct("PS5", 500, 3.5),
+    new DigitalProduct("PHP Course", 50, 250),
+    new PhysicalProduct("Xbox", 450, 4.0)
+];
 
-$digital = new DigitalProduct("PHP Course", 50, 250);
-
-$physical->showDetails();
-$digital->showDetails();
+foreach ($products as $product) {
+    echo $product->getCategory();
+    echo " - Livraison : ";
+    echo $product->calculateShipping();
+    echo "<br>";
+}
