@@ -7,7 +7,7 @@ interface Payable{
   public function calculateTotal(): float;
 }
 
-abstract class Product implements Payable, Shippable
+abstract class Product implements Payable
 {
     protected string $name;
     protected float  $price;
@@ -31,11 +31,11 @@ abstract class Product implements Payable, Shippable
 
     abstract public function getCategory(): string;
 
-    abstract public function calculateShipping(): float ;
+    
 
 }
 
-class PhysicalProduct extends Product {
+class PhysicalProduct extends Product  implements Shippable{
 
    protected float $weight;
 
@@ -84,9 +84,7 @@ class DigitalProduct extends Product {
         return "Digital Product";
     }
 
-    public function calculateShipping(): float {
-      return 0.0 ;
-    }
+
 }
 
 $products = [
