@@ -9,10 +9,13 @@ abstract class Product implements Payable
 {
     protected string $name;
     protected float  $price;
+    protected int  $quantity;
 
-    public function __construct(string $name, float $price){
+    public function __construct(string $name, float $price ,int  $quantity){
         $this->name = $name;
         $this->price = $price;
+        $this->quantity = $quantity;
+        
     }
 
     public function getPrice(): float {
@@ -21,7 +24,7 @@ abstract class Product implements Payable
     
     public function calculateTotal(): float
     {
-      return $this->price ;
+      return $this->price * $this->quantity;
     }
 
     abstract public function getCategory(): string;
@@ -34,9 +37,9 @@ class PhysicalProduct extends Product {
 
    protected float $weight;
 
-   public function __construct(string $name,float $price,float $weight) {
+   public function __construct(string $name,float $price, int $quantity ,float $weight) {
    
-     parent::__construct($name, $price);
+     parent::__construct($name, $price, $quantity);
    
      $this->weight = $weight;
    }
@@ -61,9 +64,9 @@ class DigitalProduct extends Product {
 
    protected float $fileSize;
 
-   public function __construct(string $name,float $price,float $fileSize) {
+   public function __construct(string $name,float $price, int $quantity,float $fileSize) {
     
-     parent::__construct($name, $price);
+     parent::__construct($name, $price , $quantity);
 
      $this->fileSize = $fileSize;
    }
@@ -85,8 +88,8 @@ class DigitalProduct extends Product {
 }
 
 $products = [
-    new PhysicalProduct("PS5", 500, 3.5),
-    new DigitalProduct("PHP Course", 50, 250)
+    new PhysicalProduct("PS5", 500, 12,3.5),
+    new DigitalProduct("PHP Course", 23,50, 250)
 ];
 
 foreach ($products as $product) {
