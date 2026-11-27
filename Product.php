@@ -1,6 +1,6 @@
 <?php
 
-class Product
+abstract class Product
 {
     protected string $name;
     protected float  $price;
@@ -14,14 +14,9 @@ class Product
         return $this->price;
     }
 
-    public function getCategory(): string
-    {
-        return "General Product";
-    }
+    abstract function getCategory(): string;
 
-    public function calculateShipping(): float {
-      return 0.0 ;
-    }
+    abstract function calculateShipping(): float ;
 
 }
 
