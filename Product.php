@@ -1,6 +1,11 @@
 <?php
 
-abstract class Product
+
+interface Payable{
+  public function calculateTotal(): float;
+}
+
+abstract class Product implements Payable
 {
     protected string $name;
     protected float  $price;
@@ -13,10 +18,15 @@ abstract class Product
     public function getPrice(): float {
         return $this->price;
     }
+    
+    public function calculateTotal(): float
+    {
+      return $this->price ;
+    }
 
-    abstract function getCategory(): string;
+    abstract public function getCategory(): string;
 
-    abstract function calculateShipping(): float ;
+    abstract public function calculateShipping(): float ;
 
 }
 
@@ -76,13 +86,9 @@ class DigitalProduct extends Product {
 
 $products = [
     new PhysicalProduct("PS5", 500, 3.5),
-    new DigitalProduct("PHP Course", 50, 250),
-    new PhysicalProduct("Xbox", 450, 4.0)
+    new DigitalProduct("PHP Course", 50, 250)
 ];
 
 foreach ($products as $product) {
-    echo $product->getCategory();
-    echo " - Livraison : ";
-    echo $product->calculateShipping();
-    echo "<br>";
+    echo $product->calculateTotal() . "<br>" ;
 }
