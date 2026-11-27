@@ -1,11 +1,13 @@
 <?php
-
+interface Shippable{
+  public function calculateShipping():float;
+}
 
 interface Payable{
   public function calculateTotal(): float;
 }
 
-abstract class Product implements Payable
+abstract class Product implements Payable, Shippable
 {
     protected string $name;
     protected float  $price;
