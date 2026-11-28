@@ -2,7 +2,7 @@
 
 
 interface Payable{
-  public function pay( float $amount): float;
+  public function pay( float $amount): string;
 }
 
 abstract class Payment implements Payable{
@@ -29,8 +29,11 @@ class CreditCardPayment extends Payment{
       return "Credit Card";
     }
 
-    public function pay( float $amount): float{
-      return $this->feeRate * $amount;
+    public function pay( float $amount): string{
+      
+      $total = $amount + ($this->feeRate * $amount);
+
+      return $this->getPaymentType() . ": " . number_format($total, 2);
     }
 
 }
@@ -44,11 +47,14 @@ class PayPalPayment extends Payment{
     }
 
     public function getPaymentType(): string{
-      return "Credit Card";
+      return "Paypal";
     }
 
-    public function pay( float $amount): float{
-      return $this->feeRate * $amount;
+    public function pay( float $amount): string{
+      
+      $total = $amount + ($this->feeRate * $amount);
+
+      return $this->getPaymentType() . ": " . number_format($total, 2);
     }
 
 }
@@ -57,3 +63,7 @@ $payments = [
     new CreditCardPayment(0.02),
     new PayPalPayment(0.03)
 ];
+
+foreach($payments as $payment){
+  echo $payment->pay(100) . "<br>" ;
+}
