@@ -1,97 +1,59 @@
 <?php
-interface Shippable{
-  public function calculateShipping():float;
-}
+
 
 interface Payable{
-  public function calculateTotal(): float;
+  public function pay( float $amount): float;
 }
 
-abstract class Product implements Payable
-{
-    protected string $name;
-    protected float  $price;
-    protected int  $quantity;
+abstract class Payment implements Payable{
+  protected float $feeRate;
 
-    public function __construct(string $name, float $price ,int  $quantity){
-        $this->name = $name;
-        $this->price = $price;
-        $this->quantity = $quantity;
-        
-    }
+  public function __construct(float $feeRate)
+  {
+    $this->feeRate = $feeRate;
+  }
 
-    public function getPrice(): float {
-        return $this->price;
-    }
+  abstract public function getPaymentType(): string;
+}
+
+
+class CreditCardPayment extends Payment{
     
-    public function calculateTotal(): float
-    {
-      return $this->price * $this->quantity;
-    }
-
-    abstract public function getCategory(): string;
-
     
-
-}
-
-class PhysicalProduct extends Product  implements Shippable{
-
-   protected float $weight;
-
-   public function __construct(string $name,float $price, int $quantity ,float $weight) {
-   
-     parent::__construct($name, $price, $quantity);
-   
-     $this->weight = $weight;
-   }
-
-   public function showDetails(): void {
-     echo"Nom : " . $this->name;
-     echo "<br>Prix :" . $this->price;
-     echo"<br>Poid :" . $this->weight . "Kg";
-   }
-
-   public function getCategory(): string
+    public function __construct(float $feeRate)
     {
-        return "Physical Product";
+      parent::__construct($feeRate);
     }
 
-    public function calculateShipping(): float {
-      return 10.0 ;
+    public function getPaymentType(): string{
+      return "Credit Card";
     }
+
+    public function pay( float $amount): float{
+      return $this->feeRate * $amount;
+    }
+
 }
 
-class DigitalProduct extends Product {
-
-   protected float $fileSize;
-
-   public function __construct(string $name,float $price, int $quantity,float $fileSize) {
+class PayPalPayment extends Payment{
     
-     parent::__construct($name, $price , $quantity);
-
-     $this->fileSize = $fileSize;
-   }
-
-   public function showDetails(): void {
-     echo"Nom : " . $this->name;
-     echo "<br>Prix :" . $this->price;
-     echo"<br>Size :" . $this->fileSize . "Kb";
-   }
-
-   public function getCategory(): string
+    
+    public function __construct(float $feeRate)
     {
-        return "Digital Product";
+      parent::__construct($feeRate);
     }
 
+    public function getPaymentType(): string{
+      return "Credit Card";
+    }
+
+    public function pay( float $amount): float{
+      return $this->feeRate * $amount;
+    }
 
 }
 
-$products = [
-    new PhysicalProduct("PS5", 500, 12,3.5),
-    new DigitalProduct("PHP Course", 23,50, 250)
+$payments = [
+    new CreditCardPayment(0.02),
+    new PayPalPayment(0.03)
 ];
-
-foreach ($products as $product) {
-    echo $product->calculateTotal() . "<br>" ;
-}
